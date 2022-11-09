@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -58,13 +57,16 @@ class _MyHomePageState extends State<MyHomePage> {
             debugPrint('Refresh clicked ...... ');
           },)],
       ),
-      body: const Padding(
-        padding: EdgeInsets.fromLTRB(15, 15, 0, 20),
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
         child: _listView(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        tooltip: 'Increment',
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditPage(list: [],index: 0, editMode: false),),);
+          debugPrint('Edit clicked');
+        },
+        tooltip: 'Add volunteer',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
@@ -72,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class _listView extends StatelessWidget{
-  const _listView({super.key});
+  //const _listView({super.key});
   @override
   Widget build(BuildContext context){
     return FutureBuilder(
