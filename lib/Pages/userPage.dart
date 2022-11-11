@@ -1,22 +1,11 @@
 import 'dart:convert';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'Pages/AddEditPage.dart';
-import 'Setup/welcome.dart';
+import 'AddEditPage.dart';
 
-Future<void> main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyDxDeAoiqhRlnFjaX1Jcb2W10WoRuVshUc',
-      appId: '1:162885818833:android:924d9fd9841580d42028f0',
-      messagingSenderId: '162885818833',
-      projectId: 'health-screening-fe6c0',
-    ),
-  );
+void main() {
   runApp(const MyApp());
 }
 
@@ -31,18 +20,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: const WelcomePage(),
+      home: const MyUserHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class MyUserHomePage extends StatefulWidget {
+  const MyUserHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyUserHomePage> createState() => _MyUserHomePageState();
 }
 
 Future getData() async{
@@ -54,17 +41,17 @@ Future getData() async{
   return responseBody;
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyUserHomePageState extends State<MyUserHomePage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(widget.title),
+        title: Text('User'),
         actions: [IconButton(icon:  const Icon(Icons.refresh),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Health Screening'),),);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const MyUserHomePage(),),);
             debugPrint('Refresh clicked ...... ');
           },)],
       ),
@@ -74,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditPage(list: [],index: 0, editMode: false, role :'user'),),);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditPage(list: [],index: 0, editMode: false, role: 'user',),),);
           debugPrint('Edit clicked');
         },
         tooltip: 'Add volunteer',
@@ -106,7 +93,7 @@ class _listView extends StatelessWidget{
                 return ListTile(
                   leading:  GestureDetector(child: const Icon(Icons.edit),
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddEditPage(list: snap,index: index, editMode: true, role: 'user',),),);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddEditPage(list: snap,index: index, editMode: true, role: 'admin',),),);
                         debugPrint('Edit clicked');
                       }),
                   title: Text(snap[index]['name']),

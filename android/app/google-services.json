@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "162885818833",
+    "project_id": "health-screening-fe6c0",
+    "storage_bucket": "health-screening-fe6c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162885818833:android:924d9fd9841580d42028f0",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "162885818833-oa3i35jh0ceqlvs6pdtjohegk3evj9ia.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxDeAoiqhRlnFjaX1Jcb2W10WoRuVshUc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "162885818833-oa3i35jh0ceqlvs6pdtjohegk3evj9ia.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

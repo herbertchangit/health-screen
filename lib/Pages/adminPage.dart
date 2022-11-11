@@ -1,22 +1,13 @@
 import 'dart:convert';
 
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'Pages/AddEditPage.dart';
-import 'Setup/welcome.dart';
+import '../Setup/welcome.dart';
+import 'AddEditPage.dart';
 
-Future<void> main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyDxDeAoiqhRlnFjaX1Jcb2W10WoRuVshUc',
-      appId: '1:162885818833:android:924d9fd9841580d42028f0',
-      messagingSenderId: '162885818833',
-      projectId: 'health-screening-fe6c0',
-    ),
-  );
+void main() {
   runApp(const MyApp());
 }
 
@@ -31,18 +22,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: const WelcomePage(),
+      home: const MyAdminHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class MyAdminHomePage extends StatefulWidget {
+  const MyAdminHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyAdminHomePage> createState() => _MyAdminHomePageState();
 }
 
 Future getData() async{
@@ -54,28 +43,54 @@ Future getData() async{
   return responseBody;
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyAdminHomePageState extends State<MyAdminHomePage> {
+
+  void _signOut() {
+    FirebaseAuth.instance.signOut();
+    //UserCredential user = FirebaseAuth.instance.currentUser as UserCredential;
+    //print('$user');
+    runApp(
+        const MaterialApp(
+          home: WelcomePage(),
+        )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(widget.title),
-        actions: [IconButton(icon:  const Icon(Icons.refresh),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Health Screening'),),);
-            debugPrint('Refresh clicked ...... ');
-          },)],
+        title: const Text('Admin'),
+        actions: [
+          IconButton(onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const MyAdminHomePage(),),);
+            //debugPrint('Refresh clicked ...... ');
+          }, icon: const Icon(Icons.refresh)),
+          IconButton(
+              icon:  const Icon(Icons.logout),
+              onPressed: () {
+                _signOut();
+                //debugPrint('Logout clicked ...... ');
+
+              },
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-        child: _listView(),
+      body: Center(
+        child: SizedBox(
+          width: 600,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            child: _listView(),
+          ),
+        )
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditPage(list: [],index: 0, editMode: false, role :'user'),),);
-          debugPrint('Edit clicked');
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddEditPage(list: [],index: 0, editMode: false, role: "admin"),),);
+          //debugPrint('Edit clicked');
         },
         tooltip: 'Add volunteer',
         child: const Icon(Icons.add),
@@ -99,14 +114,13 @@ class _listView extends StatelessWidget{
           }
           return snapshot.hasData
               ? ListView.builder(
-
               itemCount: snapshot.data.length,
               itemBuilder: (context, index){
                 List snap = snapshot.data;
                 return ListTile(
                   leading:  GestureDetector(child: const Icon(Icons.edit),
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddEditPage(list: snap,index: index, editMode: true, role: 'user',),),);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddEditPage(list: snap,index: index, editMode: true, role: "admin",),),);
                         debugPrint('Edit clicked');
                       }),
                   title: Text(snap[index]['name']),
@@ -116,7 +130,7 @@ class _listView extends StatelessWidget{
                       var url = 'delete.php';
                       http.post(Uri(scheme: 'https', host: 'unbarbed-election.000webhostapp.com', path: url),
                           body: {'id': snap[index]['id'],});
-                      debugPrint('Delete clicked');
+                      //debugPrint('Delete clicked');
                     },),
                 );
               }
